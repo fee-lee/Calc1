@@ -4,7 +4,12 @@ public class CalcRomanArab {
     static Scanner scan = new Scanner(System.in);
     static int num1, num2;
     static char arithmeticOperation;
+    static String operands[];
+    static String leftPartPre;
+    static String rightPartPre;
     static int result;
+    static int numRoman1;
+    static int numRoman2;
     static int resultRomanInt;
 
 
@@ -25,14 +30,27 @@ public class CalcRomanArab {
             arithmeticOperation = '*';
         } else if (InputExpression.contains("/") == true) {
             arithmeticOperation = '/';
+        } else {
+            throw new NullPointerException("Нет знака математической операции. ");
         }
 
-        String operands[] = InputExpression.split("[+-/*]");
 
+
+        String operands[] = InputExpression.split("[+-/*]");
         String leftPartPre = operands[0];
         String rightPartPre = operands[1];
-        String leftPartPost = leftPartPre.trim();
-        String rightPartPost = rightPartPre.trim();
+
+
+//        try {
+//            String leftPartPre = operands[0];
+//            String rightPartPre = operands[1];
+//        }catch (NullPointerException e){
+//            System.out.println("Вы ввели выражение не соответствующее условиям. " + e);
+//        }
+
+
+
+
 
         String[] roman = {"O", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII", "XIII", "XIV", "XV", "XVI", "XVII", "XVIII", "XIX", "XX",
                 "XXI", "XXII", "XXIII", "XXIV", "XXV", "XXVI", "XXVII", "XXVIII", "XXIX", "XXX", "XXXI", "XXXII", "XXXIII", "XXXIV", "XXXV", "XXXVI", "XXXVII", "XXXVIII", "XXXIX", "XL",
@@ -42,53 +60,71 @@ public class CalcRomanArab {
                 "LXXXI", "LXXXII", "LXXXIII", "LXXXIV", "LXXXV", "LXXXVI", "LXXXVII", "LXXXVIII", "LXXXIX", "XC",
                 "XCI", "XCII", "XCIII", "XCIV", "XCV", "XCVI", "XCVII", "XCVIII", "XCIX", "C"
         };
-
-
-        try{
+//      Проверка, есть ли в частях выражения римские числа
+        try {
             for (int i = 0; i < roman.length; i++) {
                 if (roman[i].equals(leftPartPre)) {
-                    num1 = i;
+                    numRoman1 = i;
                 }
             }
             for (int i = 0; i < roman.length; i++) {
                 if (roman[i].equals(rightPartPre)) {
-                    num2 = i;
+                    numRoman2 = i;
                 }
             }
-            {
-                resultRomanInt = calculated(num1, num2, arithmeticOperation);
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("Вы ввели выражение не соответствующее условиям." + e);
+        }
+
+        //  Если они есть и полученные значения не ноль, т.е. нашли соответствия в массиве,
+        //  выполняем операцию с римскими числами.
+
+        if ((numRoman1 !=0)&(numRoman2!=0)) {
+            if ((numRoman1<numRoman2)&arithmeticOperation=='-') {
+                throw new ArithmeticException("Римские числа не бывают отрицательными.");
+            }
+            else {
+                resultRomanInt = calculated(numRoman1, numRoman2, arithmeticOperation);
                 String resultRoman = roman[resultRomanInt];
                 System.out.println(resultRoman);
             }
         }
-        catch (ArrayIndexOutOfBoundsException e){
+        //  Если римские числа после проверки оказались ноль, значит соответствий в массиве нет.
+        //  И значит это или число арабское, или вообще не число.
+        //  Выполняем блок с арабскими числами.
+        else {
+            String regex = "[0-9]+";
 
-        }
+            if ((leftPartPre.matches(regex) == true)&(rightPartPre.matches(regex) == true)) {
 
+                num1 = Integer.parseInt(leftPartPre);
+                num2 = Integer.parseInt(rightPartPre);
 
-        try {
-            num1 = Integer.parseInt(leftPartPre);
-            num2 = Integer.parseInt(rightPartPre);
-            try {
-                if (num1 < 0) {
-                    throw new MyExceptionOverBorderN1();
-                } else if (num1 > 10) {
-                    throw new MyExceptionOverBorderN1();
-                } else if (num2 < 0) {
-                    throw new MyExceptionOverBorderN1();
-                } else if (num2 > 10) {
-                    throw new MyExceptionOverBorderN1();
+                try {
+                    if (num1 < 0) {
+                        throw new MyExceptionOverBorderN1();
+                    } else if (num1 > 10) {
+                        throw new MyExceptionOverBorderN1();
+                    } else if (num2 < 0) {
+                        throw new MyExceptionOverBorderN1();
+                    } else if (num2 > 10) {
+                        throw new MyExceptionOverBorderN1();
+                    }
+                } catch (MyExceptionOverBorderN1 s) {
+                    System.out.println("Exception: " + s.toString());
+                    return;
                 }
-            } catch (MyExceptionOverBorderN1 s) {
-                System.out.println("Exception: " + s.toString());
-                return;
+
+                if ((num2 == 0)&(arithmeticOperation=='/')) {
+                        throw new IllegalArgumentException("Нельзя делить на ноль 0");
+                        }else {
+                            result = calculated(num1, num2, arithmeticOperation);
+                            System.out.println(result);
+                        }
+                    }
+            else {
+                throw new MyExceptionAlfa();
             }
-
-            result = calculated(num1, num2, arithmeticOperation);
-            System.out.println(result);
-        }
-        catch (NumberFormatException e){
-
         }
     }
 
