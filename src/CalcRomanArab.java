@@ -34,23 +34,9 @@ public class CalcRomanArab {
             throw new NullPointerException("Нет знака математической операции. ");
         }
 
-
-
         String operands[] = InputExpression.split("[+-/*]");
         String leftPartPre = operands[0];
         String rightPartPre = operands[1];
-
-
-//        try {
-//            String leftPartPre = operands[0];
-//            String rightPartPre = operands[1];
-//        }catch (NullPointerException e){
-//            System.out.println("Вы ввели выражение не соответствующее условиям. " + e);
-//        }
-
-
-
-
 
         String[] roman = {"O", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII", "XIII", "XIV", "XV", "XVI", "XVII", "XVIII", "XIX", "XX",
                 "XXI", "XXII", "XXIII", "XXIV", "XXV", "XXVI", "XXVII", "XXVIII", "XXIX", "XXX", "XXXI", "XXXII", "XXXIII", "XXXIV", "XXXV", "XXXVI", "XXXVII", "XXXVIII", "XXXIX", "XL",
